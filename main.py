@@ -3,8 +3,12 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Messa
 from const import admin_id, token
 from file_to_json import process_questions_from_text
 from Questions import set_test,get_test
-from Users import insert, get_all_user, delete, delete_all
+from Users import insert, get_all_user, delete, delete_all,get_user,update_user
+from RandomGenerator import generate
 
+polls = {}
+savollar = {}
+true_list = {}
 
 async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(f'Hello {update.effective_user.first_name}')
@@ -16,7 +20,7 @@ async def go_test(update: Update, context:ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
 
     try:
-        message = insert(first_name, last_name, user_id)
+        message = insert(first_name, last_name, user_id,0)
         if message == 'ok':
             await update.message.reply_text("✅ Testga qo'shildingiz, admin boshlashini kuting...")
 
@@ -63,20 +67,42 @@ async def go(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 await context.bot.send_message(int(admin_id), f"{i.ism} {i.familya} xabar yuborilmadi")
         try:
             dat = get_test(number=number)
+            index = 0
 
+            for i in dat:
+                mass = []
+                varint_ = {}
+                index2 = 0
+                for j in i.options:
+                    mass.append(j.text)
+                dat = generate(mass)
+                mass = dat['new_variant']
+                true_list[index] = dat['true_index']
+                varint_['savol'] = i.text
+                for j in mass:
+                    varint_[index2] = str(j)
+                    index2 += 1
+
+                savollar[index] = varint_
+
+                del varint_
+                del mass
+                index += 1
+                  
             for i in users:
-                try:
-                    await context.bot.send_poll(
-                        chat_id=i.telegram_id,
-                        question="O'zbekiston poytaxti qaysi?",
-                        options=["Toshkent", "Buxoro", "Samarqand", "Navoiy"],
-                        type='quiz',
-                        correct_option_id=0,
-                        is_anonymous=False
-                    )
-                except:
-                    pass
-
+                m = []
+                for j in range(4):
+                    m.append(savollar[0][j])
+                    
+                await context.bot.send_poll(
+                    chat_id = i.telegram_id, 
+                    question=savollar[0]['savol'], 
+                    options=m,type='quiz', 
+                    correct_option_id=true_list[0], 
+                    is_anonymous=False, 
+                    allows_multiple_answers=False
+                    )  
+                 
 
         except ValueError as e:
             print(e)
@@ -116,26 +142,60 @@ app = ApplicationBuilder().token(token).build()
 
 
 async def poll_answer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    poll_id = update.poll_answer.poll_id
+    
     poll_answer = update.poll_answer
-    selected_option = update.poll_answer.option_ids[0]
-    user = update.poll_answer.user  # Telegram foydalanuvchisi
-    selected_option = poll_answer.option_ids[0]
-    print(poll_answer)
+    print(poll_answer.option_ids[0])
+    print(poll_answer.poll_id)
+    print(poll_answer.user.first_name)
+    print(poll_answer.user.last_name)
+    print(poll_answer.user.id)
+    print(get_user(poll_answer.user.id).question_number)
 
-    # To‘g‘ri yoki xato aniqlanadi
-'''is_correct = selected_option == correct_option_id
+    if int(poll_answer.option_ids[0]) == true_list[int(get_user(poll_answer.user.id).question_number)]:
+        new_answer = get_user(poll_answer.user.id).question_number + 1
+        trues = get_user(poll_answer.user.id).true_answer_number
+        falses = get_user(poll_answer.user.id).false_answer_number
+        update_user(poll_answer.user.id, new_answer,trues+1,falses)
+        if int(new_answer) < len(true_list):
+            m = []
+            for j in range(4):
+                m.append(savollar[new_answer][j])
+            await context.bot.send_poll(
+                chat_id = poll_answer.user.id, 
+                question=savollar[new_answer]['savol'], 
+                options=m,type='quiz', 
+                correct_option_id=true_list[new_answer], 
+                is_anonymous=False, 
+                allows_multiple_answers=False
+                ) 
+        else:
+            await context.bot.send_message(chat_id=poll_answer.user.id ,text=f"{poll_answer.user.first_name} Siz testni tugatdingiz")
+            await context.bot.send_message(chat_id=poll_answer.user.id ,text=f"Natijangiz\nJami savollar soni: {len(true_list)}\nTo'g'ri javoblar soni:{get_user(poll_answer.user.id).true_answer_number}\nXato javoblar soni: {get_user(poll_answer.user.id).false_answer_number}")
+            
+    else:
+        new_answer = get_user(poll_answer.user.id).question_number + 1
+        trues = get_user(poll_answer.user.id).true_answer_number
+        falses = get_user(poll_answer.user.id).false_answer_number
+        update_user(poll_answer.user.id, new_answer,trues,falses+1)
 
-    # 🔍 Natijani chiqaramiz
-    print("📥 Yangi javob:")
-    print(f"👤 Foydalanuvchi: {user.first_name} {user.last_name or ''} (Telegram ID: {user.id})")
-    print(f"📊 Javobi: {'✅ To‘g‘ri' if is_correct else '❌ Xato'} (Tanlangan: {selected_option}, To‘g‘ri: {correct_option_id})")'''
-
-
-
-
-
-
+        if int(new_answer) < len(true_list):
+            m = []
+            for j in range(4):
+                m.append(savollar[new_answer][j])
+            await context.bot.send_poll(
+                chat_id = poll_answer.user.id, 
+                question=savollar[new_answer]['savol'], 
+                options=m,type='quiz', 
+                correct_option_id=true_list[new_answer], 
+                is_anonymous=False, 
+                allows_multiple_answers=False
+                ) 
+        else:
+            await context.bot.send_message(chat_id=poll_answer.user.id ,text=f"{poll_answer.user.first_name} Siz testni tugatdingiz")
+            await context.bot.send_message(chat_id=poll_answer.user.id ,text=f"Natijangiz\nJami savollar soni: {len(true_list)}\nTo'g'ri javoblar soni:{get_user(poll_answer.user.id).true_answer_number}\nXato javoblar soni: {get_user(poll_answer.user.id).false_answer_number}")
+            
+        
+        
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:

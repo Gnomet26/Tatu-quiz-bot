@@ -13,6 +13,10 @@ class User(Base):
     ism = Column(String(50), nullable=False)
     familya = Column(String(50), nullable=False)
     telegram_id = Column(String(20), nullable=False, unique=True)
+    question_number = Column(Integer, nullable=False, default=0)
+    true_answer_number = Column(Integer, nullable=False,default=0)
+    false_answer_number = Column(Integer, nullable=False,default=0)
+
 
 # MySQL ulanish
 engine = create_engine(db_query, echo=True)
@@ -22,11 +26,11 @@ SessionLocal = sessionmaker(bind=engine)
 
 
 
-def insert(ism:String, familya:String,telegram_id:String):
+def insert(ism:String, familya:String,telegram_id:String,question_number:Integer):
     try:
 
         session = SessionLocal()
-        new_user = User(ism=ism, familya=familya, telegram_id=telegram_id)
+        new_user = User(ism=ism, familya=familya, telegram_id=telegram_id, question_number=question_number)
         session.add(new_user)
         session.commit()
         session.close()
@@ -55,3 +59,24 @@ def delete_all():
     session.query(User).delete()
     session.commit()
     session.close()
+
+def get_user(telegram_id):
+    session = SessionLocal()
+    user = session.query(User).filter_by(telegram_id=telegram_id).first()
+    return user
+
+def update_user(telegram_id, new_number,true_answer,false_answer):
+    try:
+        session = SessionLocal()
+        user = session.query(User).filter_by(telegram_id=telegram_id).first()
+
+        if user:
+            user.question_number = new_number
+            user.true_answer_number = true_answer
+            user.false_answer_number = false_answer
+            session.commit()
+            return 'ok'
+        else:
+            return 'foydalanuvchi topilmadi'
+    except:
+        return 'xatolik'

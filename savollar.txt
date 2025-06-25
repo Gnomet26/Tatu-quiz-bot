@@ -1,58 +1,68 @@
 %# O‘zbekiston poytaxti qaysi? %#
+
 %@ Toshkent @%
 %$ Buxoro $%
 %$ Samarqand $%
 %$ Navoiy $%
 
 %# Python dasturlash tilining kengaytmasi nima? %#
+
 %@ .py @%
 %$ .js $%
 %$ .txt $%
 %$ .java $%
 
 %# Quyidagilardan qaysi HTML teg hisoblanadi? %#
+
 %@ <div> @%
 %$ {{ title }} $%
 %$ print() $%
 %$ def $%
 
 %# Eng yirik okean qaysi? %#
+
 %@ Tinch okeani @%
 %$ Atlantika okeani $%
 %$ Hind okeani $%
 %$ Shimoliy muz okeani $%
 
 %# 1 byte necha bitdan iborat? %#
+
 %@ 8 @%
 %$ 4 $%
 %$ 2 $%
 %$ 16 $%
 
 %# Dunyodagi eng baland tog‘ cho‘qqisi? %#
+
 %@ Everest @%
 %$ Elbrus $%
 %$ Kilimanjaro $%
 %$ Alpomish $%
 
 %# O‘zbek tilida nechta unli tovush mavjud? %#
+
 %@ 6 @%
 %$ 7 $%
 %$ 5 $%
 %$ 8 $%
 
 %# 2 ning 5-darajasi nechiga teng? %#
+
 %@ 32 @%
 %$ 16 $%
 %$ 64 $%
 %$ 10 $%
 
 %# Django bu...? %#
+
 %@ Python uchun veb freymvork @%
 %$ Mobil ilova $%
 %$ Ma'lumotlar ombori $%
 %$ Veb-brauzer $%
 
 %# 1 kilometrda necha metr bor? %#
+
 %@ 1000 @%
 %$ 100 $%
 %$ 10 $%

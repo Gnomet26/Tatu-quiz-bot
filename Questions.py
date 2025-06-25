@@ -6,17 +6,18 @@ import random
 
 Base = declarative_base()
 
+engine = create_engine(db_query, echo=False)
 class Question(Base):
     __tablename__ = 'savollar'
     id = Column(Integer, primary_key=True)
-    text = Column(String, nullable=False)
+    text = Column(String(255), nullable=False)
 
     options = relationship("Option", back_populates="question", cascade="all, delete-orphan")
 
 class Option(Base):
     __tablename__ = 'variantlar'
     id = Column(Integer, primary_key=True)
-    text = Column(String, nullable=False)
+    text = Column(String(255), nullable=False)
     is_correct = Column(Boolean, default=False)
 
     question_id = Column(Integer, ForeignKey('savollar.id'))
@@ -25,7 +26,6 @@ class Option(Base):
 
 def set_test(data):
 
-    engine = create_engine(db_query, echo=False)
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -62,6 +62,6 @@ def get_test(number:int):
     # 3. Tasodifiy savollarni tanlab olish
     selected_questions = random.sample(all_questions, number)
 
-    session.close()
+    #session.close()
     return selected_questions
 
