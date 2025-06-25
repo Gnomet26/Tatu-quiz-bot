@@ -10,8 +10,8 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    ism = Column(String(50), nullable=False)
-    familya = Column(String(50), nullable=False)
+    ism = Column(String(50), nullable=True,default="***")
+    familya = Column(String(50), nullable=True,default="***")
     telegram_id = Column(String(20), nullable=False, unique=True)
     question_number = Column(Integer, nullable=False, default=0)
     true_answer_number = Column(Integer, nullable=False,default=0)
@@ -30,7 +30,7 @@ def insert(ism:String, familya:String,telegram_id:String,question_number:Integer
     try:
 
         session = SessionLocal()
-        new_user = User(ism=ism, familya=familya, telegram_id=telegram_id, question_number=question_number)
+        new_user = User(ism=ism, familya=familya, telegram_id=telegram_id, question_number=question_number,true_answer_number =0,false_answer_number = 0)
         session.add(new_user)
         session.commit()
         session.close()

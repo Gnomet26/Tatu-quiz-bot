@@ -6,12 +6,9 @@ from Questions import set_test,get_test
 from Users import insert, get_all_user, delete, delete_all,get_user,update_user
 from RandomGenerator import generate
 
-polls = {}
 savollar = {}
 true_list = {}
 
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
 async def go_test(update: Update, context:ContextTypes.DEFAULT_TYPE) -> None:
 
@@ -206,7 +203,7 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 app.add_handler(CommandHandler("go", go))
 app.add_handler(CommandHandler("stop",stop))
-app.add_handler(CommandHandler("go_test", go_test))
+app.add_handler(CommandHandler("start", go_test))
 app.add_handler(CommandHandler("stop_test", stop_test))
 app.add_handler(MessageHandler(filters.Document.ALL, handle_document))
 app.add_handler(PollAnswerHandler(poll_answer_handler))
