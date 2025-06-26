@@ -1,69 +1,69 @@
-%# O‘zbekiston poytaxti qaysi? %#
+%# Quyidagilardan qaysi operatsion tizim Linux yadrosiga asoslangan? #%
 
-%@ Toshkent @%
-%$ Buxoro $%
-%$ Samarqand $%
-%$ Navoiy $%
+%@ Ubuntu @%
+%$ Windows $%
+%$ macOS $%
+%$ DOS $%
 
-%# Python dasturlash tilining kengaytmasi nima? %#
+%# Suvning kimyoviy formulasi qanday? #%
 
-%@ .py @%
-%$ .js $%
-%$ .txt $%
-%$ .java $%
+%@ H₂O @%
+%$ CO₂ $%
+%$ O₂ $%
+%$ H₂SO₄ $%
 
-%# Quyidagilardan qaysi HTML teg hisoblanadi? %#
+%# Quyosh sistemasidagi eng katta sayyora qaysi? #%
 
-%@ <div> @%
-%$ {{ title }} $%
-%$ print() $%
-%$ def $%
+%@ Yupiter @%
+%$ Yer $%
+%$ Saturn $%
+%$ Mars $%
 
-%# Eng yirik okean qaysi? %#
+%# Dasturlashda "loop" nima uchun ishlatiladi? #%
 
-%@ Tinch okeani @%
-%$ Atlantika okeani $%
-%$ Hind okeani $%
-%$ Shimoliy muz okeani $%
+%@ Takroriy amallarni bajarish uchun @%
+%$ O‘zgaruvchilarni saqlash uchun $%
+%$ Foydalanuvchi interfeysini yaratish uchun $%
+%$ Xatoliklarni aniqlash uchun $%
 
-%# 1 byte necha bitdan iborat? %#
+%# HTMLda sahifa sarlavhasi qaysi teg bilan yoziladi? #%
 
-%@ 8 @%
-%$ 4 $%
-%$ 2 $%
-%$ 16 $%
+%@ <title> @%
+%$ <header> $%
+%$ <head> $%
+%$ <h1> $%
 
-%# Dunyodagi eng baland tog‘ cho‘qqisi? %#
-
-%@ Everest @%
-%$ Elbrus $%
-%$ Kilimanjaro $%
-%$ Alpomish $%
-
-%# O‘zbek tilida nechta unli tovush mavjud? %#
-
-%@ 6 @%
-%$ 7 $%
-%$ 5 $%
-%$ 8 $%
-
-%# 2 ning 5-darajasi nechiga teng? %#
-
-%@ 32 @%
-%$ 16 $%
-%$ 64 $%
-%$ 10 $%
-
-%# Django bu...? %#
-
-%@ Python uchun veb freymvork @%
-%$ Mobil ilova $%
-%$ Ma'lumotlar ombori $%
-%$ Veb-brauzer $%
-
-%# 1 kilometrda necha metr bor? %#
+%# 1 kilogramm necha grammga teng? #%
 
 %@ 1000 @%
 %$ 100 $%
 %$ 10 $%
 %$ 500 $%
+
+%# Python dasturlash tilida ro‘yxatlar qaysi belgilar bilan ajratiladi? #%
+
+%@ [ ] @%
+%$ { } $%
+%$ ( ) $%
+%$ < > $%
+
+%# 2020-yilda yozgi Olimpiada o‘yinlari qayerda o‘tkazildi? #%
+
+%@ Tokio @%
+%$ Pekin $%
+%$ Parij $%
+%$ London $%
+
+%# Eng ko‘p gaplashiladigan til qaysi? #%
+
+%@ Xitoy tili (mandarin) @%
+%$ Ingliz tili $%
+%$ Ispan tili $%
+%$ Arab tili $%
+
+%# Kompyuterning “miya”si deb qaysi qurilmaga aytiladi? #%
+
+%@ Protsessor (CPU) @%
+%$ Monitor $%
+%$ Qattiq disk (HDD) $%
+%$ Klaviatura $%

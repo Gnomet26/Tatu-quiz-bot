@@ -5,9 +5,26 @@ from file_to_json import process_questions_from_text
 from Questions import set_test,get_test
 from Users import insert, get_all_user, delete, delete_all,get_user,update_user
 from RandomGenerator import generate
+import asyncio
 
 savollar = {}
 true_list = {}
+
+
+def parse_args(text: str):
+    """
+    Masalan: /go q=5 t=10
+    Natija: {'q': '5', 't': '10'}
+    """
+    args = {}
+    parts = text.strip().split()
+    if len(parts) > 1:
+        for pair in parts[1:]:
+            if '=' in pair:
+                key, value = pair.split('=', 1)
+                args[key] = value
+    return args
+        
 
 
 async def go_test(update: Update, context:ContextTypes.DEFAULT_TYPE) -> None:
@@ -36,8 +53,9 @@ async def stop_test(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
 
     try:
-        delete(user_id)
+        #delete(user_id)
         await context.bot.send_message(user_id, "Siz testdan chiqib ketdingiz")
+        await context.bot.send_message(user_id, text=f"Natijangiz\n\nJami savollar soni: {len(true_list)}\nTo'g'ri javoblar soni: {get_user(user_id).true_answer_number}\nXato javoblar soni: {len(true_list)-int(get_user(user_id).true_answer_number)}")
     except:
         await context.bot.send_message(user_id, "Nimadir xato bo'ldi, qayta urinib ko'ring")
 
@@ -45,21 +63,20 @@ async def stop_test(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def go(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
-    if len(context.args) != 1 or not context.args[0].isdigit():
-        await update.message.reply_text("⚠️ To'g'ri foydalanish: /go <raqam>")
-        return
-
     if str(update.effective_user.id) == str(admin_id):
-        
-        number = int(context.args[0])
-        print(f"Admin yuborgan raqam: {number}")
+
+        args = parse_args(update.message.text)
+        q_value = args.get('q')
+        t_value = args.get('t')
+
+        number = int(q_value)
         await update.message.reply_text(f"✅ Qabul qilindi: {number}")
 
         users = get_all_user()
 
         for i in users:
             try:
-                await context.bot.send_message(i.telegram_id, "Test boshlandi")
+                await context.bot.send_message(i.telegram_id, f"Test boshlandi,umumiy vaqt: {t_value} daqiqa")
             except: 
                 await context.bot.send_message(int(admin_id), f"{i.ism} {i.familya} xabar yuborilmadi")
         try:
@@ -94,13 +111,22 @@ async def go(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 await context.bot.send_poll(
                     chat_id = i.telegram_id, 
                     question=savollar[0]['savol'], 
-                    options=m,type='quiz', 
+                    options=m,
+                    type='quiz', 
                     correct_option_id=true_list[0], 
                     is_anonymous=False, 
                     allows_multiple_answers=False
                     )  
                  
+            if int(t_value) != 0 and int(t_value) > 0:
+                
+                context.job_queue.run_once(
+                    stop, when=60*int(t_value), chat_id=admin_id
+                    )
+                await context.bot.send_message(chat_id=admin_id, text="Vaqt ketti")
 
+            else:
+                pass
         except ValueError as e:
             print(e)
     else:
@@ -196,8 +222,19 @@ async def poll_answer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
+
+        #delete_all()
+        users = get_all_user()
+
+        for i in users:
+            try:
+                update_user(i.telegram_id,len(true_list),get_user(i.telegram_id).true_answer_number,len(true_list)-int(get_user(i.telegram_id).true_answer_number))
+                await context.bot.send_message(i.telegram_id, "Test vaqti tugadi")
+                await context.bot.send_message(i.telegram_id, text=f"Natijangiz\n\nJami savollar soni: {len(true_list)}\nTo'g'ri javoblar soni: {get_user(i.telegram_id).true_answer_number}\nXato javoblar soni: {len(true_list)-int(get_user(i.telegram_id).true_answer_number)}")
+                
+            except: 
+                await context.bot.send_message(int(admin_id), f"{i.ism} {i.familya} xabar yuborilmadi")
         delete_all()
-        await context.bot.send_message(admin_id, "test to'xtatildi")
     except:
         await context.bot.send_message(admin_id, "Xatolik, test yakunlanmadi")
 
